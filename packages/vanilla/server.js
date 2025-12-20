@@ -35,10 +35,9 @@ if (!prod) {
 // API 요청은 별도 라우터에서 처리
 // 서버에서 같은 서버로 HTTP 요청을 보내면 Express가 먼저 받아버리므로
 // Express에서 직접 API를 처리하되, MSW 핸들러와 동일한 로직 사용
-if (!prod) {
-  const { createMockApiRouter } = await import("./src/mocks/apiRoutes.js");
-  app.use("/api", createMockApiRouter());
-}
+// 프로덕션 모드에서도 API 라우터가 필요함 (SSR에서 API 호출 시)
+const { createMockApiRouter } = await import("./src/mocks/apiRoutes.js");
+app.use("/api", createMockApiRouter());
 
 app.use("*all", async (req, res) => {
   try {
